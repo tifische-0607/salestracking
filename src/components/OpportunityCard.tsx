@@ -2,10 +2,20 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { SalesOpportunity } from "@/types/sales";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, CalendarDays, Building, UserRound } from "lucide-react";
+import { DollarSign, CalendarDays, Building, UserRound, MoreVertical } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 interface OpportunityCardProps {
   opportunity: SalesOpportunity;
+  onUpdateStage: (id: string, newStage: SalesOpportunity['stage']) => void;
 }
 
 const stageColors: Record<SalesOpportunity['stage'], string> = {
@@ -17,13 +27,37 @@ const stageColors: Record<SalesOpportunity['stage'], string> = {
   'Closed Lost': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
 };
 
-const OpportunityCard: React.FC<OpportunityCardProps> = ({ opportunity }) => {
+const OpportunityCard: React.FC<OpportunityCardProps> = ({ opportunity, onUpdateStage }) => {
+  const stages: SalesOpportunity['stage'][] = ['New', 'Qualification', 'Proposal', 'Negotiation', 'Closed Won', 'Closed Lost'];
+
   return (
     <Card className="w-full">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-xl">{opportunity.name}</CardTitle>
-          <Badge className={stageColors[opportunity.stage]}>{opportunity.stage}</Badge>
+          <div className="flex items-center space-x-2">
+            <Badge className={stageColors[opportunity.stage]}>{opportunity.stage}</Badge>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Change Stage</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {stages.map((stage) => (
+                  <DropdownMenuItem
+                    key={stage}
+                    onClick={() => onUpdateStage(opportunity.id, stage)}
+                    disabled={opportunity.stage === stage}
+                  >
+                    {stage}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
         <CardDescription className="flex items-center text-sm text-muted-foreground mt-1">
           <Building className="h-4 w-4 mr-1" /> {opportunity.account}

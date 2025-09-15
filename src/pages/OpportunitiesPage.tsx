@@ -20,6 +20,14 @@ const OpportunitiesPage = () => {
     setOpportunities((prevOpportunities) => [...prevOpportunities, newOpportunity]);
   };
 
+  const updateOpportunityStage = (id: string, newStage: SalesOpportunity['stage']) => {
+    setOpportunities((prevOpportunities) =>
+      prevOpportunities.map((opportunity) =>
+        opportunity.id === id ? { ...opportunity, stage: newStage } : opportunity
+      )
+    );
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
       <Card className="w-full max-w-6xl shadow-lg">
@@ -41,7 +49,7 @@ const OpportunitiesPage = () => {
           </Dialog>
         </CardHeader>
         <CardContent className="p-4">
-          <OpportunityList opportunities={opportunities} />
+          <OpportunityList opportunities={opportunities} onUpdateStage={updateOpportunityStage} />
         </CardContent>
       </Card>
       <MadeWithDyad />

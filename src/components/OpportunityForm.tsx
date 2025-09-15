@@ -67,10 +67,15 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ onAddOpportunity, onC
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    onAddOpportunity({
-      ...values,
+    const opportunityData: Omit<SalesOpportunity, "id"> = {
+      name: values.name,
+      stage: values.stage,
+      amount: values.amount,
       closeDate: format(values.closeDate, "yyyy-MM-dd"), // Format date for storage
-    });
+      account: values.account,
+      contact: values.contact,
+    };
+    onAddOpportunity(opportunityData);
     form.reset();
     onClose();
   };
