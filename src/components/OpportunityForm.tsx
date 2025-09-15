@@ -74,16 +74,16 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ onAddOpportunity }) =
       name: values.name,
       stage: values.stage,
       amount: values.amount,
-      closeDate: format(values.closeDate, "yyyy-MM-dd"),
+      closedate: format(values.closeDate, "yyyy-MM-dd"),
       account: values.account,
       contact: values.contact,
-      accountManager: values.accountManager,
-      currentStatus: {
+      accountmanager: values.accountManager,
+      currentstatus: {
         status: "Opportunity created",
         timestamp: new Date().toISOString(),
       },
     };
-    await onAddOpportunity(opportunityData);
+    await onAddOpportunity(opportunityData as any);
     form.reset();
   };
 
