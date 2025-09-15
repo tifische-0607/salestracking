@@ -4,12 +4,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NotFound from "./pages/NotFound";
-import OpportunitiesPage from "./pages/OpportunitiesPage";
-import DashboardPage from "./pages/DashboardPage";
-import { SalesOpportunity } from "./types/sales";
-import { supabase } from "./lib/supabase";
-import { showError, showSuccess } from "./utils/toast";
+import NotFound from "@/pages/NotFound";
+import OpportunitiesPage from "@/pages/OpportunitiesPage";
+import DashboardPage from "@/pages/DashboardPage";
+import { SalesOpportunity } from "@/types/sales";
+import { supabase } from "@/lib/supabase";
+import { showError, showSuccess } from "@/utils/toast";
 
 const queryClient = new QueryClient();
 
