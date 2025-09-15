@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,7 +13,19 @@ import { SalesOpportunity } from "./types/sales";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [opportunities, setOpportunities] = useState<SalesOpportunity[]>([]);
+  const [opportunities, setOpportunities] = useState<SalesOpportunity[]>(() => {
+    try {
+      const savedOpportunities = localStorage.getItem("salesOpportunities");
+      return savedOpportunities ? JSON.parse(savedOpportunities) : [];
+    } catch (error) {
+      console.error("Error parsing opportunities from localStorage", error);
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("salesOpportunities", JSON.stringify(opportunities));
+  }, [opportunities]);
 
   const addOpportunity = (newOpportunityData: Omit<SalesOpportunity, "id">) => {
     const newOpportunity: SalesOpportunity = {
