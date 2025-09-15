@@ -53,7 +53,7 @@ const OpportunityList: React.FC<OpportunityListProps> = ({ opportunities, onUpda
               <TableCell className="font-medium">{opp.name}</TableCell>
               <TableCell>{opp.account}</TableCell>
               <TableCell>${opp.amount.toLocaleString()}</TableCell>
-              <TableCell>{format(new Date(opp.closedate), 'PPP')}</TableCell>
+              <TableCell>{format(new Date(opp.closeDate), 'PPP')}</TableCell>
               <TableCell>
                 <Select
                   value={opp.stage}
@@ -74,7 +74,7 @@ const OpportunityList: React.FC<OpportunityListProps> = ({ opportunities, onUpda
                   </SelectContent>
                 </Select>
               </TableCell>
-              <TableCell>{opp.accountmanager}</TableCell>
+              <TableCell>{opp.accountManager}</TableCell>
             </TableRow>
           ))}
         </TableBody>

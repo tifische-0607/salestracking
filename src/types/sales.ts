@@ -4,11 +4,11 @@ export interface SalesOpportunity {
   name: string;
   stage: 'New' | 'Qualification' | 'Proposal' | 'Negotiation' | 'Closed Won' | 'Closed Lost';
   amount: number;
-  closedate: string;
+  closeDate: string;
   account: string;
   contact: string;
-  accountmanager: string;
-  currentstatus: {
+  accountManager: string;
+  currentStatus: {
     status: string;
     timestamp: string;
   };

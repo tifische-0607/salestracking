@@ -57,7 +57,7 @@ const App = () => {
 
     const { data, error } = await supabase
       .from('opportunities')
-      .update({ stage: newStage, currentstatus: updatedStatus })
+      .update({ stage: newStage, currentStatus: updatedStatus })
       .eq('id', id)
       .select();
 

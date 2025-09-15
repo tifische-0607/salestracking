@@ -12,7 +12,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 const AccountManagerPieChart: React.FC<AccountManagerPieChartProps> = ({ opportunities }) => {
   const data = React.useMemo(() => {
     const managerCounts = opportunities.reduce((acc, opp) => {
-      const manager = opp.accountmanager || 'Unassigned';
+      const manager = opp.accountManager || 'Unassigned';
       acc[manager] = (acc[manager] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
