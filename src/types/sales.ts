@@ -6,4 +6,5 @@ export interface SalesOpportunity {
   closeDate: string; // Using string for simplicity, can be Date object
   account: string;
   contact: string;
+  accountManager: string;
 }

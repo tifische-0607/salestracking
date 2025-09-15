@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -46,6 +46,9 @@ const formSchema = z.object({
   contact: z.string().min(2, {
     message: "Contact name must be at least 2 characters.",
   }),
+  accountManager: z.string().min(2, {
+    message: "Account manager name must be at least 2 characters.",
+  }),
 });
 
 interface OpportunityFormProps {
@@ -63,6 +66,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ onAddOpportunity, onC
       closeDate: new Date(),
       account: "",
       contact: "",
+      accountManager: "",
     },
   });
 
@@ -74,6 +78,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ onAddOpportunity, onC
       closeDate: format(values.closeDate, "yyyy-MM-dd"), // Format date for storage
       account: values.account,
       contact: values.contact,
+      accountManager: values.accountManager,
     };
     onAddOpportunity(opportunityData);
     form.reset();
@@ -117,6 +122,19 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ onAddOpportunity, onC
               <FormLabel>Contact Person</FormLabel>
               <FormControl>
                 <Input placeholder="e.g., Jane Doe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="accountManager"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Account Manager</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., John Smith" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

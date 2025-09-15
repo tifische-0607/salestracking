@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { SalesOpportunity } from "@/types/sales";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, CalendarDays, Building, UserRound, MoreVertical } from "lucide-react";
+import { DollarSign, CalendarDays, Building, UserRound, MoreVertical, UserCog } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,6 +68,12 @@ const OpportunityCard: React.FC<OpportunityCardProps> = ({ opportunity, onUpdate
           <UserRound className="h-4 w-4 mr-2 text-muted-foreground" />
           <span>Contact: {opportunity.contact}</span>
         </div>
+        {opportunity.accountManager && (
+          <div className="flex items-center">
+            <UserCog className="h-4 w-4 mr-2 text-muted-foreground" />
+            <span>Account Manager: {opportunity.accountManager}</span>
+          </div>
+        )}
         <div className="flex items-center">
           <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
           <span>Amount: ${opportunity.amount.toLocaleString()}</span>
