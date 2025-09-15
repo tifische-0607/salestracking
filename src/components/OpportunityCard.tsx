@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { SalesOpportunity } from "@/types/sales";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, CalendarDays, Building, UserRound, MoreVertical, UserCog } from "lucide-react";
+import { DollarSign, CalendarDays, Building, UserRound, MoreVertical, UserCog, Clock } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,58 +31,73 @@ const OpportunityCard: React.FC<OpportunityCardProps> = ({ opportunity, onUpdate
   const stages: SalesOpportunity['stage'][] = ['New', 'Qualification', 'Proposal', 'Negotiation', 'Closed Won', 'Closed Lost'];
 
   return (
-    <Card className="w-full">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-xl">{opportunity.name}</CardTitle>
-          <div className="flex items-center space-x-2">
-            <Badge className={stageColors[opportunity.stage]}>{opportunity.stage}</Badge>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Change Stage</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {stages.map((stage) => (
-                  <DropdownMenuItem
-                    key={stage}
-                    onClick={() => onUpdateStage(opportunity.id, stage)}
-                    disabled={opportunity.stage === stage}
-                  >
-                    {stage}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+    <Card className="w-full flex flex-col justify-between">
+      <div>
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-xl">{opportunity.name}</CardTitle>
+            <div className="flex items-center space-x-2">
+              <Badge className={stageColors[opportunity.stage]}>{opportunity.stage}</Badge>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Change Stage</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {stages.map((stage) => (
+                    <DropdownMenuItem
+                      key={stage}
+                      onClick={() => onUpdateStage(opportunity.id, stage)}
+                      disabled={opportunity.stage === stage}
+                    >
+                      {stage}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
-        </div>
-        <CardDescription className="flex items-center text-sm text-muted-foreground mt-1">
-          <Building className="h-4 w-4 mr-1" /> {opportunity.account}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-2 text-sm">
-        <div className="flex items-center">
-          <UserRound className="h-4 w-4 mr-2 text-muted-foreground" />
-          <span>Contact: {opportunity.contact}</span>
-        </div>
-        {opportunity.accountManager && (
+          <CardDescription className="flex items-center text-sm text-muted-foreground mt-1">
+            <Building className="h-4 w-4 mr-1" /> {opportunity.account}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-2 text-sm">
           <div className="flex items-center">
-            <UserCog className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span>Account Manager: {opportunity.accountManager}</span>
+            <UserRound className="h-4 w-4 mr-2 text-muted-foreground" />
+            <span>Contact: {opportunity.contact}</span>
           </div>
-        )}
-        <div className="flex items-center">
-          <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
-          <span>Amount: ${opportunity.amount.toLocaleString()}</span>
-        </div>
-        <div className="flex items-center">
-          <CalendarDays className="h-4 w-4 mr-2 text-muted-foreground" />
-          <span>Close Date: {opportunity.closeDate}</span>
-        </div>
-      </CardContent>
+          {opportunity.accountManager && (
+            <div className="flex items-center">
+              <UserCog className="h-4 w-4 mr-2 text-muted-foreground" />
+              <span>Account Manager: {opportunity.accountManager}</span>
+            </div>
+          )}
+          <div className="flex items-center">
+            <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
+            <span>Amount: ${opportunity.amount.toLocaleString()}</span>
+          </div>
+          <div className="flex items-center">
+            <CalendarDays className="h-4 w-4 mr-2 text-muted-foreground" />
+            <span>Close Date: {opportunity.closeDate}</span>
+          </div>
+        </CardContent>
+      </div>
+      {opportunity.currentStatus && (
+        <CardContent className="pt-2 mt-2 border-t">
+          <div className="flex items-start">
+            <Clock className="h-4 w-4 mr-2 mt-1 text-muted-foreground" />
+            <div className="flex flex-col">
+              <span className="font-medium text-sm">{opportunity.currentStatus.status}</span>
+              <span className="text-xs text-muted-foreground">
+                {new Date(opportunity.currentStatus.timestamp).toLocaleString()}
+              </span>
+            </div>
+          </div>
+        </CardContent>
+      )}
     </Card>
   );
 };

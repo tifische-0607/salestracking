@@ -79,6 +79,10 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ onAddOpportunity, onC
       account: values.account,
       contact: values.contact,
       accountManager: values.accountManager,
+      currentStatus: {
+        status: "Opportunity created",
+        timestamp: new Date().toISOString(),
+      },
     };
     onAddOpportunity(opportunityData);
     form.reset();

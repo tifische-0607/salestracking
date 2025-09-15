@@ -16,7 +16,20 @@ const App = () => {
   const [opportunities, setOpportunities] = useState<SalesOpportunity[]>(() => {
     try {
       const savedOpportunities = localStorage.getItem("salesOpportunities");
-      return savedOpportunities ? JSON.parse(savedOpportunities) : [];
+      const parsedOpportunities = savedOpportunities ? JSON.parse(savedOpportunities) : [];
+      // Backwards compatibility for items that don't have a status
+      return parsedOpportunities.map((opp: any) => {
+        if (!opp.currentStatus) {
+          return {
+            ...opp,
+            currentStatus: {
+              status: "Status not recorded",
+              timestamp: new Date().toISOString(),
+            },
+          };
+        }
+        return opp;
+      });
     } catch (error) {
       console.error("Error parsing opportunities from localStorage", error);
       return [];
@@ -38,7 +51,16 @@ const App = () => {
   const updateOpportunityStage = (id: string, newStage: SalesOpportunity['stage']) => {
     setOpportunities((prevOpportunities) =>
       prevOpportunities.map((opportunity) =>
-        opportunity.id === id ? { ...opportunity, stage: newStage } : opportunity
+        opportunity.id === id 
+        ? { 
+            ...opportunity, 
+            stage: newStage,
+            currentStatus: {
+              status: `Stage updated to ${newStage}`,
+              timestamp: new Date().toISOString(),
+            }
+          } 
+        : opportunity
       )
     );
   };

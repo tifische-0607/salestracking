@@ -7,4 +7,8 @@ export interface SalesOpportunity {
   account: string;
   contact: string;
   accountManager: string;
+  currentStatus: {
+    status: string;
+    timestamp: string;
+  };
 }
