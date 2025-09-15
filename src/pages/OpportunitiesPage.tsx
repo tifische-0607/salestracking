@@ -11,12 +11,17 @@ import OpportunityList from "@/components/OpportunityList";
 
 interface OpportunitiesPageProps {
   opportunities: SalesOpportunity[];
-  addOpportunity: (newOpportunityData: Omit<SalesOpportunity, "id">) => void;
+  addOpportunity: (newOpportunityData: Omit<SalesOpportunity, "id" | "created_at">) => Promise<void>;
   updateOpportunityStage: (id: string, newStage: SalesOpportunity['stage']) => void;
 }
 
 const OpportunitiesPage: React.FC<OpportunitiesPageProps> = ({ opportunities, addOpportunity, updateOpportunityStage }) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleAddOpportunity = async (opportunityData: Omit<SalesOpportunity, "id" | "created_at">) => {
+    await addOpportunity(opportunityData);
+    setIsFormOpen(false);
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
@@ -41,7 +46,7 @@ const OpportunitiesPage: React.FC<OpportunitiesPageProps> = ({ opportunities, ad
                 <DialogHeader>
                   <DialogTitle>Add New Sales Opportunity</DialogTitle>
                 </DialogHeader>
-                <OpportunityForm onAddOpportunity={addOpportunity} onClose={() => setIsFormOpen(false)} />
+                <OpportunityForm onAddOpportunity={handleAddOpportunity} />
               </DialogContent>
             </Dialog>
           </div>

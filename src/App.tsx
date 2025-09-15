@@ -9,60 +9,70 @@ import NotFound from "./pages/NotFound";
 import OpportunitiesPage from "./pages/OpportunitiesPage";
 import DashboardPage from "./pages/DashboardPage";
 import { SalesOpportunity } from "./types/sales";
+import { supabase } from "./lib/supabase";
+import { showError, showSuccess } from "./utils/toast";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [opportunities, setOpportunities] = useState<SalesOpportunity[]>(() => {
-    try {
-      const savedOpportunities = localStorage.getItem("salesOpportunities");
-      const parsedOpportunities = savedOpportunities ? JSON.parse(savedOpportunities) : [];
-      // Backwards compatibility for items that don't have a status
-      return parsedOpportunities.map((opp: any) => {
-        if (!opp.currentStatus) {
-          return {
-            ...opp,
-            currentStatus: {
-              status: "Status not recorded",
-              timestamp: new Date().toISOString(),
-            },
-          };
-        }
-        return opp;
-      });
-    } catch (error) {
-      console.error("Error parsing opportunities from localStorage", error);
-      return [];
-    }
-  });
+  const [opportunities, setOpportunities] = useState<SalesOpportunity[]>([]);
 
   useEffect(() => {
-    localStorage.setItem("salesOpportunities", JSON.stringify(opportunities));
-  }, [opportunities]);
+    const fetchOpportunities = async () => {
+      const { data, error } = await supabase
+        .from('opportunities')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-  const addOpportunity = (newOpportunityData: Omit<SalesOpportunity, "id">) => {
-    const newOpportunity: SalesOpportunity = {
-      id: crypto.randomUUID(),
-      ...newOpportunityData,
+      if (error) {
+        console.error("Error fetching opportunities:", error);
+        showError("Could not fetch opportunities.");
+      } else {
+        setOpportunities(data as SalesOpportunity[]);
+      }
     };
-    setOpportunities((prevOpportunities) => [...prevOpportunities, newOpportunity]);
+
+    fetchOpportunities();
+  }, []);
+
+  const addOpportunity = async (newOpportunityData: Omit<SalesOpportunity, "id" | "created_at">) => {
+    const { data, error } = await supabase
+      .from('opportunities')
+      .insert([newOpportunityData])
+      .select();
+
+    if (error) {
+      console.error("Error adding opportunity:", error);
+      showError("Failed to add opportunity.");
+    } else if (data) {
+      setOpportunities((prevOpportunities) => [data[0] as SalesOpportunity, ...prevOpportunities]);
+      showSuccess("Opportunity added successfully!");
+    }
   };
 
-  const updateOpportunityStage = (id: string, newStage: SalesOpportunity['stage']) => {
-    setOpportunities((prevOpportunities) =>
-      prevOpportunities.map((opportunity) =>
-        opportunity.id === id 
-        ? { 
-            ...opportunity, 
-            stage: newStage,
-            currentStatus: {
-              status: `Stage updated to ${newStage}`,
-              timestamp: new Date().toISOString(),
-            }
-          } 
-        : opportunity
-      )
-    );
+  const updateOpportunityStage = async (id: string, newStage: SalesOpportunity['stage']) => {
+    const updatedStatus = {
+      status: `Stage updated to ${newStage}`,
+      timestamp: new Date().toISOString(),
+    };
+
+    const { data, error } = await supabase
+      .from('opportunities')
+      .update({ stage: newStage, currentStatus: updatedStatus })
+      .eq('id', id)
+      .select();
+
+    if (error) {
+      console.error("Error updating opportunity stage:", error);
+      showError("Failed to update stage.");
+    } else if (data) {
+      setOpportunities((prevOpportunities) =>
+        prevOpportunities.map((opportunity) =>
+          opportunity.id === id ? (data[0] as SalesOpportunity) : opportunity
+        )
+      );
+      showSuccess("Opportunity stage updated!");
+    }
   };
 
   return (

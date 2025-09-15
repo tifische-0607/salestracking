@@ -52,11 +52,10 @@ const formSchema = z.object({
 });
 
 interface OpportunityFormProps {
-  onAddOpportunity: (opportunity: Omit<SalesOpportunity, "id">) => void;
-  onClose: () => void;
+  onAddOpportunity: (opportunity: Omit<SalesOpportunity, "id" | "created_at">) => Promise<void>;
 }
 
-const OpportunityForm: React.FC<OpportunityFormProps> = ({ onAddOpportunity, onClose }) => {
+const OpportunityForm: React.FC<OpportunityFormProps> = ({ onAddOpportunity }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -70,12 +69,12 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ onAddOpportunity, onC
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const opportunityData: Omit<SalesOpportunity, "id"> = {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const opportunityData = {
       name: values.name,
       stage: values.stage,
       amount: values.amount,
-      closeDate: format(values.closeDate, "yyyy-MM-dd"), // Format date for storage
+      closeDate: format(values.closeDate, "yyyy-MM-dd"),
       account: values.account,
       contact: values.contact,
       accountManager: values.accountManager,
@@ -84,9 +83,8 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ onAddOpportunity, onC
         timestamp: new Date().toISOString(),
       },
     };
-    onAddOpportunity(opportunityData);
+    await onAddOpportunity(opportunityData);
     form.reset();
-    onClose();
   };
 
   return (
