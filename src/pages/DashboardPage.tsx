@@ -5,6 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import { SalesOpportunity } from '@/types/sales';
 import SalesPieChart from '@/components/SalesPieChart';
 import { MadeWithDyad } from '@/components/made-with-dyad';
+import AccountManagerPieChart from '@/components/AccountManagerPieChart';
 
 interface DashboardPageProps {
   opportunities: SalesOpportunity[];
@@ -23,8 +24,9 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ opportunities }) => {
             </Link>
           </Button>
         </div>
-        <div className="grid gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
           <SalesPieChart opportunities={opportunities} />
+          <AccountManagerPieChart opportunities={opportunities} />
         </div>
       </div>
       <MadeWithDyad />
